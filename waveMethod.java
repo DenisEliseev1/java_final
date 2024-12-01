@@ -11,8 +11,8 @@ public class waveMethod {
             System.out.println("Ошибка - координата начальной точки не корректна");
             start(arrch, xmax, ymax);
         }
-        
-        //sc.close();
+
+        // sc.close();
         arrch[xA][yA] = 0;
         arrch = waveMapFstep(arrch, xA, yA, xA, yA, xmax, ymax);
         arrch = waveMapStep(arrch, xA, yA, xmax, ymax, 1);
@@ -48,8 +48,8 @@ public class waveMethod {
             // System.out.println(4);
         }
         // System.out.println(arrch [x][y-1]);
-        //printarray.printTerminal(arrch, xmax, ymax);
-        //System.out.println();
+        // printarray.printTerminal(arrch, xmax, ymax);
+        // System.out.println();
         return arrch;
     }
 
@@ -73,46 +73,60 @@ public class waveMethod {
     }
 
     public static void result(int[][] arrch, int xmax, int ymax) throws Exception {
-        String [][] str = new String[xmax][ymax];
+        String[][] str = new String[xmax][ymax];
         Scanner sc1 = new Scanner(System.in);
         System.out.println("Координата Х конечной точки");
         int xB = sc1.nextInt();
         System.out.println("Координата У конечной точки");
         int yB = sc1.nextInt();
+        sc1.close();
+        int xA = 0;
+        int yA = 0;
         if (arrch[xB][yB] == -1) {
             System.out.println("Ошибка - координата конечной точки не корректна");
             result(arrch, xmax, ymax);
         }
         for (int i = 0; i < xmax; i++) {
             for (int j = 0; j < ymax; j++) {
-                if (arrch [i][j] == -1) {
-                    str [i][j] = "x";
-                } else if (arrch [i][j] == 0) {
-                    str [i][j] = "A";
-                } else str [i][j] = String.valueOf (arrch [i][j]);
+                if (arrch[i][j] == -1) {
+                    str[i][j] = "x";
+                } else if (arrch[i][j] == 0) {
+                    xA = i;
+                    yA = j;
+                } else
+                    str[i][j] = String.valueOf(arrch[i][j]);
             }
         }
-        int x = xB;
-        int y = xB;
-        while (arrch [x][y]>0) {
-            if ((x - 1 >= 0) && (arrch[x - 1][y] == 0)) {               
-                    arrch[x - 1][y] = arrch[x][y] + 1;                
-                // System.out.println(1);
-            } else if ((y + 1 < ymax) && (arrch[x][y + 1] == 0)) {
-                // System.out.println(2);
-                    arrch[x][y + 1] = arrch[x][y] + 1;
+        
+        str = resultStr(arrch, str, xB, yB, xmax, ymax);   
+        str [xB][yB] = "B";
+        str [xA][yA] = "A";
+        printarray.printFile(str, xmax, ymax);
+    }
 
-                    // System.out.println(arrch [x][y+1]);
-            } else  if ((x + 1 < xmax) && (arrch[x + 1][y] == 0)) {
-                    // System.out.println(3);
-                    arrch[x + 1][y] = arrch[x][y] + 1;
-            } else if ((y - 1 >= 0) && (arrch[x][y - 1] == 0)) {
-                    arrch[x][y - 1] += arrch[x][y] + 1;
-
-        }    
-
-        sc1.close();
-        printarray.printFile (str, xmax, ymax);
+    public static String [][] resultStr (int[][] arrch, String [][] str,  int x, int y, int xmax, int ymax) throws Exception {
+            //System.out.println(xB);
+            if ((x - 1 >= 0) && (arrch[x - 1][y] < arrch[x][y]) && (arrch[x-1][y] != -1)) {
+                str[x-1][y] = "V";
+                x = x - 1;
+                //System.out.println(1);
+            } else if ((y + 1 < ymax) && (arrch[x][y + 1] < arrch[x][y])&& (arrch[x][y+1] != -1)) {
+                //System.out.println(2);
+                str[x][y+1] = "<";
+                y = y + 1;
+                //System.out.println(arrch [x][y+1]);
+            } else if ((x + 1 < xmax) && (arrch[x + 1][y] < arrch[x][y])&& (arrch[x+1][y] != -1)) {
+                //System.out.println(3);
+                str[x+1][y] = "^";
+                x = x + 1;
+            } else if ((y - 1 >= 0) && (arrch[x][y - 1] < arrch[x][y])&& (arrch[x][y-1] != -1)) {
+                str[x][y-1] = ">";
+                y = y - 1;
+            }
+            if (arrch[x][y] > 0) {
+                resultStr (arrch, str, x, y, xmax, ymax);
+            }
+        return str;
     }
 
     /**
