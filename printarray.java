@@ -1,5 +1,6 @@
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintStream;
 
 public class printarray {
     public static void printTerminal(int arrch[][], int xmax, int ymax) {
@@ -16,15 +17,15 @@ public class printarray {
         for (int i = 0; i < xmax; i++) {
             System.out.println();
             for (int j = 0; j < ymax; j++) {
-                System.out.printf("%s%s", arrch[i][j], ' ');
+                System.out.printf("%3s", arrch[i][j]);
             }
         }
         
-        try (FileWriter res = new FileWriter("result.txt", false)) {
-            res.write("Result \n");
+        try (PrintStream res = new PrintStream("result.txt")) {
+            res.println("Result \n");
             for (int i = 0; i < xmax; i++) {
                 for (int j = 0; j < ymax; j++) {
-                    res.append(arrch [i][j]);
+                    res.printf("%3s",arrch [i][j]);
                 }
             res.append('\n');
             }
